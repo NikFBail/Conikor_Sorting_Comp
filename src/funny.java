@@ -11,11 +11,6 @@ public class funny  implements Comparator<String> {
 
         String fracOne = "1/3";
         String fracTwo = "-1/2";
-        //int[] stupid = fracToInt(fracOne);
-        //String deciFrac = Double.toString((double)stupid[0]/(double)stupid[1]);
-        ///System.out.println(deciFrac);
-
-        
 
 
         System.out.println("Result of Fraction compare: " + thing.compareFractions(fracTwo, fracOne));
