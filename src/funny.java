@@ -11,7 +11,8 @@ public class funny  implements Comparator<String> {
 
         String fracOne = "1/3";
         String fracTwo = "-1/2";
-
+        int[] stupid = fracToInt(fracTwo);
+        System.out.println(Arrays.toString(stupid)); // Keeps negative sign
 
         System.out.println("Result of Fraction compare: " + thing.compareFractions(fracTwo, fracOne));
         System.out.println("Result of Decimal compare: " + thing.compareDecimals(potato, salmon));
@@ -72,11 +73,18 @@ public class funny  implements Comparator<String> {
         int[] fracOne = fracToInt(fractionOne);
         int[] fracTwo = fracToInt(fractionTwo);
 
-            if(fracOne[0]*fracTwo[1] > fracTwo[0]*fracOne[1]){
-                return 1 * isNegative;
-            } else {
-                return -1 * isNegative; // If they're the same it doesn't matter plus if the first one isn't true then its the opposite
-            }
+        if(fracOne[0]*fracTwo[1] > fracTwo[0]*fracOne[1]) {
+            return 1 * isNegative;
+        } 
+        if(fracOne[0]*fracTwo[1] < fracTwo[0]*fracOne[1]) {
+            return -1 * isNegative;
+        }
+        if(fracOne[1] > fracTwo[1]) {
+            return 1 * isNegative;
+        }
+        else {
+            return -1 * isNegative; // If they're the same it doesn't matter plus if the first one isn't true then its the opposite
+        }
     }
 
     public int compareFractionAndDecimal(String Fraction, String Decimal) {
@@ -90,8 +98,8 @@ public class funny  implements Comparator<String> {
 
     // Helper function section
 
-    public boolean isNegative(String decimalOne) {
-        if(decimalOne.contains("-")) return true;
+    public boolean isNegative(String num) {
+        if(num.contains("-")) return true;
         return false;
     }
 
@@ -109,7 +117,7 @@ public class funny  implements Comparator<String> {
         return 0;
     }
 
-    public int[] fracToInt(String fraction) {
+    public static int[] fracToInt(String fraction) {
         int[] arr = new int[2];
         int num = 0;
         int denom = 0;
@@ -133,7 +141,7 @@ public class funny  implements Comparator<String> {
 		System.out.println("-1/2 and 1/4:" + comp.compareFractions("-1/2","1/4"));
 		System.out.println("1/2 and 1/3:" + comp.compareFractions("1/2","1/3"));
 		System.out.println("1/2 and 2/4:" + comp.compareFractions("1/2","2/4"));
-		System.out.println("-1/2 and -2/4:" + comp.compareFractions("-1/2","-2/4"));
+		System.out.println("-4/8 and -2/4:" + comp.compareFractions("-1/2","-2/4"));
 		
 		// Fraction and a decimal
 		System.out.println("1/4 and 0.5:" + comp.compareFractionAndDecimal("1/4","0.5"));
