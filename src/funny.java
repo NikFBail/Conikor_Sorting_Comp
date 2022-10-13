@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class funny  implements Comparator<String> {
+
     public static void main(String[] args) {
 
         funny thing = new funny();
@@ -89,8 +90,11 @@ public class funny  implements Comparator<String> {
 
     public int compareFractionAndDecimal(String Fraction, String Decimal) {
 
+        double isNegative = 1;
         int[] fracityFrac = fracToInt(Fraction);
-        String deciFrac = Double.toString((double)fracityFrac[0]/(double)fracityFrac[1]);
+        if(imposterCheck(Fraction, Decimal) != 0 && imposterCheck(Fraction, Decimal) != 2) return imposterCheck(Fraction, Decimal);
+        if(imposterCheck(Fraction, Decimal) == 2) isNegative = -1; 
+        String deciFrac = Double.toString(((double)fracityFrac[0]/(double)fracityFrac[1])*isNegative);
 
         return compareDecimals(deciFrac, Decimal);
     }
@@ -123,7 +127,8 @@ public class funny  implements Comparator<String> {
         int denom = 0;
         for(int i = 0; i < fraction.length(); i++) {
             if(fraction.charAt(i) == '/') {
-                num = Integer.valueOf(fraction.substring(0, i));
+                if(fraction.charAt(0) == '-') num = Integer.valueOf(fraction.substring(1, i));
+                else num = Integer.valueOf(fraction.substring(0, i));
                 denom = Integer.valueOf(fraction.substring(i + 1));
             }
         }
@@ -141,9 +146,11 @@ public class funny  implements Comparator<String> {
 		System.out.println("-1/2 and 1/4:" + comp.compareFractions("-1/2","1/4"));
 		System.out.println("1/2 and 1/3:" + comp.compareFractions("1/2","1/3"));
 		System.out.println("1/2 and 2/4:" + comp.compareFractions("1/2","2/4"));
-		System.out.println("-4/8 and -2/4:" + comp.compareFractions("-1/2","-2/4"));
+		System.out.println("-1/2 and -2/4:" + comp.compareFractions("-1/2","-2/4"));
+		System.out.println("-2/4 and -1/2:" + comp.compareFractions("-2/4","-1/2"));
+        System.out.println("-4/8 and -2/4:" + comp.compareFractions("-4/8","-2/4"));
 		
-		// Fraction and a decimal
+        // Fraction and a decimal
 		System.out.println("1/4 and 0.5:" + comp.compareFractionAndDecimal("1/4","0.5"));
 		System.out.println("2/4 and 1.5:" + comp.compareFractionAndDecimal("2/4","1.5"));
 		System.out.println("-2/4 and -1.5:" + comp.compareFractionAndDecimal("-2/4","-1.5"));
