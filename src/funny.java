@@ -11,13 +11,16 @@ public class funny  implements Comparator<String> {
 
         String fracOne = "1/3";
         String fracTwo = "-1/2";
+        //int[] stupid = fracToInt(fracOne);
+        //String deciFrac = Double.toString((double)stupid[0]/(double)stupid[1]);
+        ///System.out.println(deciFrac);
 
         
 
 
         System.out.println("Result of Fraction compare: " + thing.compareFractions(fracTwo, fracOne));
         System.out.println("Result of Decimal compare: " + thing.compareDecimals(potato, salmon));
-        System.out.println("Result of Decimal/Fraction compare: " + thing.compareFractionAndDecimal(potato, fracOne));
+        System.out.println("Result of Decimal/Fraction compare: " + thing.compareFractionAndDecimal(potato, fracOne)); //fracOne should be bigger
         funny.runTests();
 
     }
@@ -61,8 +64,8 @@ public class funny  implements Comparator<String> {
                 }
         }
 
-        if(decOne.length > decTwo.length) return 1*isNegative;
-        else return -1*isNegative; // Equal and less than return the same thing, because we're funny
+        if(decOne.length < decTwo.length) return -1*isNegative;
+        else return 1*isNegative; // Equal and less than return the same thing, because we're funny
     }
 
 
@@ -81,16 +84,14 @@ public class funny  implements Comparator<String> {
             }
     }
 
-    public int compareFractionAndDecimal(String Decimal, String Fraction) {
+    public int compareFractionAndDecimal(String Fraction, String Decimal) {
 
         int[] fracityFrac = fracToInt(Fraction);
         String deciFrac = Double.toString((double)fracityFrac[0]/(double)fracityFrac[1]);
 
-        return compareDecimals(Decimal, deciFrac);
+        return compareDecimals(deciFrac, Decimal);
     }
-
-
-
+    
 
     // Helper function section
 
