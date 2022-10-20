@@ -1,5 +1,7 @@
 
 // Java program for implementation of Insertion Sort
+// Sourced from www.programiz.com
+// https://www.programiz.com/java-programming/examples/quick-sort#:~:text=Quicksort%20in%20Java&text=While%20dividing%20the%20array%2C%20the,both%20left%20and%20right%20subarrays.
 public class sorting {
   // method to find the partition position
   static int partition(String array[], int low, int high) {
