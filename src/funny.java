@@ -1,31 +1,7 @@
-import java.util.Arrays;
-import java.util.Comparator;
-
-public class funny  implements Comparator<String> {
-
-    public static void main(String[] args) {
-
-        funny thing = new funny();
-        
-        String potato = "0.33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333";
-        String salmon = "-0.21111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
-
-        String fracOne = "1/3";
-        String fracTwo = "-1/2";
-        int[] stupid = fracToInt(fracTwo);
-        System.out.println(Arrays.toString(stupid)); // Keeps negative sign
-
-        System.out.println("Result of Fraction compare: " + thing.compareFractions(fracTwo, fracOne));
-        System.out.println("Result of Decimal compare: " + thing.compareDecimals(potato, salmon));
-        System.out.println("Result of Decimal/Fraction compare: " + thing.compareFractionAndDecimal(potato, fracOne)); //fracOne should be bigger
-        funny.runTests();
-
-    }
-
+public class funny{
     
 // Stole this from group zero
-    @Override
-		public int compare(String o1, String o2) {
+		public static int compare(String o1, String o2) {
 			if(o1.contains("/")){
 				if(o2.contains("/")){
 					return compareFractions(o1, o2);
@@ -44,7 +20,7 @@ public class funny  implements Comparator<String> {
 		}
 
 
-    public int compareDecimals(String decimalOne, String decimalTwo) {
+    public static int compareDecimals(String decimalOne, String decimalTwo) {
         // We set this up, because if both of the inputs are negative technically the "bigger" value is smaller
         int isNegative = 1;
         char[] decOne = decimalOne.toCharArray();
@@ -79,7 +55,7 @@ public class funny  implements Comparator<String> {
     }
 
 
-    public int compareFractions(String fractionOne, String fractionTwo) {
+    public static int compareFractions(String fractionOne, String fractionTwo) {
         // We set this up, because if both of the inputs are negative technically the "bigger" value is smaller
         int isNegative = 1;
         // Imposter check is listed below
@@ -87,8 +63,8 @@ public class funny  implements Comparator<String> {
         if(imposterCheck(fractionOne, fractionTwo) == 2) isNegative = -1;
 
         // fracToInt is listed below
-        int[] fracOne = fracToInt(fractionOne);
-        int[] fracTwo = fracToInt(fractionTwo);
+        double[] fracOne = fracToLong(fractionOne);
+        double[] fracTwo = fracToLong(fractionTwo);
 
         // First numerator * second denominator and second numerator * first denominator should
         // represent the fractions with equal denominators, and we do our comparisons with that.
@@ -107,15 +83,19 @@ public class funny  implements Comparator<String> {
         }
     }
 
-    public int compareFractionAndDecimal(String Fraction, String Decimal) {
+    public static int compareFractionAndDecimal(String Fraction, String Decimal) {
         // We set this up, because if both of the inputs are negative technically the "bigger" value is smaller
         double isNegative = 1;
         // fracToInt is listed below
-        int[] fracityFrac = fracToInt(Fraction);
+        double[] fracityFrac = fracToLong(Fraction);
         // isNegative is listed below
         // This is still helpful here to keep the negative value, since fracToInt gets rid of the negative
         if(isNegative(Fraction)) isNegative = -1;
         // Convert the fraction into a decimal
+        // This currently has the weakness of not being able to convert things like 1/3 accurately
+        // The commented out line makes it so the division is more accurate, but for now we use the less
+        // accurate line since it makes this a lot quicker.
+        //String deciFrac = String.valueOf(BigDecimal.valueOf(fracityFrac[0]*isNegative).divide(BigDecimal.valueOf(fracityFrac[1]), MathContext.DECIMAL128));
         String deciFrac = Double.toString(((double)fracityFrac[0]/(double)fracityFrac[1])*isNegative);
 
         // Then we use out compareDecimals method with the fraction in the first input spot.
@@ -127,14 +107,14 @@ public class funny  implements Comparator<String> {
     // Helper function section
 
     // Simple helper for return true or false if the first position in the string is a - sign
-    public boolean isNegative(String num) {
+    public static boolean isNegative(String num) {
         if(num.contains("-")) return true;
         return false;
     }
 
     // ImposterCheck checks for if one, both or neither are negative. It will return 1 if the second is negative, -1 if the first is negative, 0 if both are positive,
     // 2 if both are negative
-    public int imposterCheck(String one, String two){
+    public static int imposterCheck(String one, String two){
         if(isNegative(one) && !isNegative(two)) {
             return -1;
         }
@@ -153,8 +133,8 @@ public class funny  implements Comparator<String> {
     // arr[1] contains the denominator
     // This method doesn't keep the negative sign, if there is any
     // so we will have to compensate for that in other methods
-    public static int[] fracToInt(String fraction) {
-        int[] arr = new int[2];
+    public static double[] fracToLong(String fraction) {
+        double[] arr = new double[2];
         int num = 0;
         int denom = 0;
         for(int i = 0; i < fraction.length(); i++) {
@@ -170,32 +150,30 @@ public class funny  implements Comparator<String> {
         return arr;
     }
 
+public static void main(String[] args) {
 
-    private static void runTests() {
-		funny comp = new funny();
-		
-		// Two fractions, positive and negative
-		System.out.println("-1/2 and 1/4:" + comp.compareFractions("-1/2","1/4"));
-		System.out.println("1/2 and 1/3:" + comp.compareFractions("1/2","1/3"));
-		System.out.println("1/2 and 2/4:" + comp.compareFractions("1/2","2/4"));
-		System.out.println("-1/2 and -2/4:" + comp.compareFractions("-1/2","-2/4"));
-		System.out.println("-2/4 and -1/2:" + comp.compareFractions("-2/4","-1/2"));
-        System.out.println("-4/8 and -2/4:" + comp.compareFractions("-4/8","-2/4"));
+    // Two fractions, positive and negative
+		System.out.println("-1/2 and 1/4:" + funny.compareFractions("-1/2","1/4"));
+		System.out.println("1/2 and 1/3:" + funny.compareFractions("1/2","1/3"));
+		System.out.println("1/2 and 2/4:" + funny.compareFractions("1/2","2/4"));
+		System.out.println("-1/2 and -2/4:" + funny.compareFractions("-1/2","-2/4"));
+		System.out.println("-2/4 and -1/2:" + funny.compareFractions("-2/4","-1/2"));
+        System.out.println("-4/8 and -2/4:" + funny.compareFractions("-4/8","-2/4"));
 		
         // Fraction and a decimal
-		System.out.println("1/4 and 0.5:" + comp.compareFractionAndDecimal("1/4","0.5"));
-		System.out.println("2/4 and 1.5:" + comp.compareFractionAndDecimal("2/4","1.5"));
-		System.out.println("-2/4 and -1.5:" + comp.compareFractionAndDecimal("-2/4","-1.5"));
-		System.out.println("-2/4 and 0:" + comp.compareFractionAndDecimal("-2/4","0"));
-		System.out.println("1/2 and -0.5:" + comp.compareFractionAndDecimal("1/2","-0.5"));
-		System.out.println("1/2 and 0.5:" + comp.compareFractionAndDecimal("1/2","0.5"));
-		System.out.println("-1/2 and -0.5:" + comp.compareFractionAndDecimal("-1/2","-0.5"));
-		System.out.println("1/3 and -0.5:" + comp.compareFractionAndDecimal("1/3","-0.5"));
+		System.out.println("1/4 and 0.5:" + funny.compareFractionAndDecimal("1/4","0.5"));
+		System.out.println("2/4 and 1.5:" + funny.compareFractionAndDecimal("2/4","1.5"));
+		System.out.println("-2/4 and -1.5:" + funny.compareFractionAndDecimal("-2/4","-1.5"));
+		System.out.println("-2/4 and 0:" + funny.compareFractionAndDecimal("-2/4","0"));
+		System.out.println("1/2 and -0.5:" + funny.compareFractionAndDecimal("1/2","-0.5"));
+		System.out.println("1/2 and 0.5:" + funny.compareFractionAndDecimal("1/2","0.5"));
+		System.out.println("-1/2 and -0.5:" + funny.compareFractionAndDecimal("-1/2","-0.5"));
+		System.out.println("1/3 and 0.33333333333333333333333333333333333333333:" + funny.compareFractionAndDecimal("1/3","0.33333333333333333333333333333333333333333"));
 		
-		System.out.println("-4.9999999999999999999999999999999999 and -5:" + comp.compareDecimals("-4.9999999999999999999999999999999999", "-5"));
-		System.out.println("4.9999999999999999999999999999999999 and 5:" + comp.compareDecimals("4.9999999999999999999999999999999999", "5"));
-		
-	}
+		System.out.println("-4.9999999999999999999999999999999999 and -5:" + funny.compareDecimals("-4.9999999999999999999999999999999999", "-5"));
+		System.out.println("4.9999999999999999999999999999999999 and 5:" + funny.compareDecimals("4.9999999999999999999999999999999999", "5"));
+    
+}
 
 
 
