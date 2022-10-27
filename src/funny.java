@@ -1,7 +1,11 @@
-public class funny{
+import java.math.BigInteger;
+import java.util.Comparator;
+
+public class funny implements Comparator<String>{
     
 // Stole this from group zero
-		public static int compare(String o1, String o2) {
+        @Override
+		public int compare(String o1, String o2) {
 			if(o1.contains("/")){
 				if(o2.contains("/")){
 					return compareFractions(o1, o2);
@@ -75,34 +79,61 @@ public class funny{
             return -1 * isNegative;
         }
         // If they happen to be equal, check which one has the larger denominator and return that as bigger
-        if(fracOne[1] > fracTwo[1]) {
-            return 1 * isNegative;
-        }
-        else {
+        if(fracOne[1] < fracTwo[1]) {
             return -1 * isNegative;
         }
+        else {
+            return 1 * isNegative;
+        }
     }
 
-    public static int compareFractionAndDecimal(String Fraction, String Decimal) {
-        // We set this up, because if both of the inputs are negative technically the "bigger" value is smaller
-        double isNegative = 1;
-        // fracToInt is listed below
-        double[] fracityFrac = fracToLong(Fraction);
-        // isNegative is listed below
-        // This is still helpful here to keep the negative value, since fracToInt gets rid of the negative
-        if(isNegative(Fraction)) isNegative = -1;
-        // Convert the fraction into a decimal
-        // This currently has the weakness of not being able to convert things like 1/3 accurately
-        // The commented out line makes it so the division is more accurate, but for now we use the less
-        // accurate line since it makes this a lot quicker.
-        //String deciFrac = String.valueOf(BigDecimal.valueOf(fracityFrac[0]*isNegative).divide(BigDecimal.valueOf(fracityFrac[1]), MathContext.DECIMAL128));
-        String deciFrac = Double.toString(((double)fracityFrac[0]/(double)fracityFrac[1])*isNegative);
-
-        // Then we use out compareDecimals method with the fraction in the first input spot.
-        // We specify why we do this in the compareDecimals method.
-        return compareDecimals(deciFrac, Decimal);
+    // We gave up, couldn't convert fraction to decimal and keep enough precision
+    // and we also tried using a convert decimal to fraction function that didn't keep enough precision either
+    public static int compareFractionAndDecimal(String fraction,String decimal) {
+        String[] saFrac = fraction.split("/");
+        BigInteger numerator1 = new BigInteger(saFrac[0]);
+        BigInteger denominator1 = new BigInteger(saFrac[1]);
+        
+        //find the length of the decimal's fractional part
+        String[] saDec = decimal.split("\\."); // need \\ because . is a special symbol in regex
+        
+        BigInteger numerator2 = null;
+        BigInteger denominator2 = null; 				
+        
+        if (saDec.length == 1) { // an integer, positive or negative
+            numerator2 = new BigInteger(saDec[0]);
+            denominator2 = new BigInteger("1");
+        } else {
+            // find the length of the decimal part
+            int n = saDec[1].length();
+            denominator2 = new BigInteger("1"); 
+            // raising 10 to the power n
+            for (int i = 0; i < n; ++i) {
+                denominator2 = denominator2.multiply(new BigInteger("10"));
+            }
+            numerator2 = new BigInteger(saDec[1]);
+            // adding the integer part
+            BigInteger intPart = new BigInteger(saDec[0]);
+            if (saDec[0].charAt(0) == '-') { // the number is negative 
+                numerator2 = (intPart.multiply(denominator2)).subtract(numerator2);
+            } else {
+                numerator2 = numerator2.add(intPart.multiply(denominator2));
+            }
+        }
+        
+        BigInteger crossMult1 = numerator1.multiply(denominator2);
+        BigInteger crossMult2 = numerator2.multiply(denominator1);
+        
+        int res = crossMult1.compareTo(crossMult2);
+        
+        if (res != 0) return res;
+        
+        if (numerator1.compareTo(new BigInteger("0")) >= 0) {
+            return 1; // for positive, the decimal is smaller
+        } else {
+            return -1; // for negative, the decimal is larger
+        }
     }
-    
 
     // Helper function section
 
@@ -149,33 +180,4 @@ public class funny{
         arr[1] = denom;
         return arr;
     }
-
-public static void main(String[] args) {
-
-    // Two fractions, positive and negative
-		System.out.println("-1/2 and 1/4:" + funny.compareFractions("-1/2","1/4"));
-		System.out.println("1/2 and 1/3:" + funny.compareFractions("1/2","1/3"));
-		System.out.println("1/2 and 2/4:" + funny.compareFractions("1/2","2/4"));
-		System.out.println("-1/2 and -2/4:" + funny.compareFractions("-1/2","-2/4"));
-		System.out.println("-2/4 and -1/2:" + funny.compareFractions("-2/4","-1/2"));
-        System.out.println("-4/8 and -2/4:" + funny.compareFractions("-4/8","-2/4"));
-		
-        // Fraction and a decimal
-		System.out.println("1/4 and 0.5:" + funny.compareFractionAndDecimal("1/4","0.5"));
-		System.out.println("2/4 and 1.5:" + funny.compareFractionAndDecimal("2/4","1.5"));
-		System.out.println("-2/4 and -1.5:" + funny.compareFractionAndDecimal("-2/4","-1.5"));
-		System.out.println("-2/4 and 0:" + funny.compareFractionAndDecimal("-2/4","0"));
-		System.out.println("1/2 and -0.5:" + funny.compareFractionAndDecimal("1/2","-0.5"));
-		System.out.println("1/2 and 0.5:" + funny.compareFractionAndDecimal("1/2","0.5"));
-		System.out.println("-1/2 and -0.5:" + funny.compareFractionAndDecimal("-1/2","-0.5"));
-		System.out.println("1/3 and 0.33333333333333333333333333333333333333333:" + funny.compareFractionAndDecimal("1/3","0.33333333333333333333333333333333333333333"));
-		
-		System.out.println("-4.9999999999999999999999999999999999 and -5:" + funny.compareDecimals("-4.9999999999999999999999999999999999", "-5"));
-		System.out.println("4.9999999999999999999999999999999999 and 5:" + funny.compareDecimals("4.9999999999999999999999999999999999", "5"));
-    
-}
-
-
-
-
 }

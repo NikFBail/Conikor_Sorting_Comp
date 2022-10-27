@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Group2 {
@@ -53,7 +54,8 @@ public class Group2 {
 	}
 
     private static void sort(String[] toSort) {
-		sorting.quickSort(toSort, 0 , toSort.length - 1);
+		//sorting.quickSort(toSort, 0 , toSort.length - 1);
+		Arrays.sort(toSort, new funny());
 	}
 
     private static void writeOutResult(String[] sorted, String outputFilename) throws FileNotFoundException {
