@@ -67,8 +67,8 @@ public class funny implements Comparator<String>{
         if(imposterCheck(fractionOne, fractionTwo) == 2) isNegative = -1;
 
         // fracToInt is listed below
-        double[] fracOne = fracToLong(fractionOne);
-        double[] fracTwo = fracToLong(fractionTwo);
+        long[] fracOne = fracToLong(fractionOne);
+        long[] fracTwo = fracToLong(fractionTwo);
 
         // First numerator * second denominator and second numerator * first denominator should
         // represent the fractions with equal denominators, and we do our comparisons with that.
@@ -164,20 +164,11 @@ public class funny implements Comparator<String>{
     // arr[1] contains the denominator
     // This method doesn't keep the negative sign, if there is any
     // so we will have to compensate for that in other methods
-    public static double[] fracToLong(String fraction) {
-        double[] arr = new double[2];
-        int num = 0;
-        int denom = 0;
-        for(int i = 0; i < fraction.length(); i++) {
-            if(fraction.charAt(i) == '/') {
-                if(fraction.charAt(0) == '-') num = Integer.valueOf(fraction.substring(1, i));
-                else num = Integer.valueOf(fraction.substring(0, i));
-                denom = Integer.valueOf(fraction.substring(i + 1));
-            }
-        }
-
-        arr[0] = num;
-        arr[1] = denom;
+    public static long[] fracToLong(String fraction) {
+        long[] arr = new long[2];
+        String[] temp = fraction.split("\\/");
+        arr[0] = Long.parseLong(temp[0]);
+        arr[1] = Long.parseLong(temp[1]);
         return arr;
     }
 }
