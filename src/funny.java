@@ -82,9 +82,9 @@ public class funny implements Comparator<String>{
         if(fracOne[1] < fracTwo[1]) {
             return -1 * isNegative;
         }
-        else {
+        else if (fracOne[1] > fracTwo[1]) {
             return 1 * isNegative;
-        }
+        } else return 0;
     }
 
     // We gave up, couldn't convert fraction to decimal and keep enough precision
@@ -167,8 +167,32 @@ public class funny implements Comparator<String>{
     public static long[] fracToLong(String fraction) {
         long[] arr = new long[2];
         String[] temp = fraction.split("\\/");
-        arr[0] = Long.parseLong(temp[0]);
+        int removeNegative = 1;
+        if(funny.isNegative(fraction)) removeNegative = -1;
+        arr[0] = Long.parseLong(temp[0])*removeNegative;
         arr[1] = Long.parseLong(temp[1]);
         return arr;
+    }
+
+    public static void main(String[] args) {
+		
+		// Two fractions, positive and negative
+		System.out.println("-1/2 and 1/4:" + funny.compareFractions("-1/2","1/4"));
+		System.out.println("1/2 and 1/3:" + funny.compareFractions("1/2","1/3"));
+		System.out.println("1/2 and 2/4:" + funny.compareFractions("1/2","2/4"));
+		System.out.println("-1/2 and -2/4:" + funny.compareFractions("-1/2","-2/4"));
+		
+		// Fraction and a decimal
+		System.out.println("1/4 and 0.5:" + funny.compareFractionAndDecimal("1/4","0.5"));
+		System.out.println("2/4 and 1.5:" + funny.compareFractionAndDecimal("2/4","1.5"));
+		System.out.println("-2/4 and -1.5:" + funny.compareFractionAndDecimal("-2/4","-1.5"));
+		System.out.println("-2/4 and 0:" + funny.compareFractionAndDecimal("-2/4","0"));
+		System.out.println("1/2 and -0.5:" + funny.compareFractionAndDecimal("1/2","-0.5"));
+		System.out.println("1/2 and 0.5:" + funny.compareFractionAndDecimal("1/2","0.5"));
+		System.out.println("-1/2 and -0.5:" + funny.compareFractionAndDecimal("-1/2","-0.5"));
+		System.out.println("1/3 and -0.5:" + funny.compareFractionAndDecimal("1/3","-0.5"));
+		
+		System.out.println("-4.9999999999999999999999999999999999 and -5:" + funny.compareDecimals("-4.9999999999999999999999999999999999", "-5"));
+		System.out.println("4.9999999999999999999999999999999999 and 5:" + funny.compareDecimals("4.9999999999999999999999999999999999", "5"));
     }
 }
